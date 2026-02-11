@@ -17,10 +17,10 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                script {
-                    docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}")
-                }
-            }
+        sh """
+            docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .
+        """
+    }
         }
 
         stage('Login to Docker Hub') {
@@ -38,12 +38,13 @@ pipeline {
         }
 
         stage('Push Docker Image') {
-            steps {
-                script {
-                    docker.push("${DOCKER_IMAGE}:${DOCKER_TAG}")
-                }
-            }
-        }
+    steps {
+        sh """
+            docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
+        """
+    }
+}
+
 
         stage('Deploy to Application Server') {
             steps {
